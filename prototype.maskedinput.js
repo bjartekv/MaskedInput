@@ -43,14 +43,8 @@ Element.addMethods({
         }
     }
 });
-        
-MaskedInput = Class.create();
-MaskedInput.prototype = {
-    definitions: {
-        '9': "[0-9]",
-        'a': "[A-Za-z]",
-        '*': "[A-Za-z0-9]"
-    },
+        	
+MaskedInput = Class.create({
     initialize: function(selector, mask, settings) {  
         this.elements = $$(selector);  
         this.mask(mask, settings);	    
@@ -77,7 +71,7 @@ MaskedInput.prototype = {
             completed: null
         }, settings || {});	
         
-        var defs = this.definitions;
+        var defs = MaskedInput.definitions;
         var tests = [];
         var partialPosition = mask.length;
         var firstNonMaskPos = null;
@@ -266,4 +260,12 @@ MaskedInput.prototype = {
         });
         return this;
     }
-};
+});
+
+Object.extend(MaskedInput,{    
+    definitions: {
+        '9': "[0-9]",
+        'a': "[A-Za-z]",
+        '*': "[A-Za-z0-9]"
+    }
+});
