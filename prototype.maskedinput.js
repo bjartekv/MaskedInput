@@ -102,7 +102,7 @@ MaskedInput = Class.create({
             input.store("buffer", buffer).store("tests", tests);
 
             function seekNext(pos) {
-                while (++pos <= len && !tests[pos]);
+                while (++pos < len && !tests[pos]);
                 return pos;
             };
 
@@ -176,7 +176,7 @@ MaskedInput = Class.create({
                             writeBuffer();
                             var next = seekNext(p);
                             $(this).caret(next);
-                            if (settings.completed && next >= len)
+                            if (settings.completed && next == len)
                                 settings.completed.call(input);
                         }
                     }
