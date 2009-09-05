@@ -43,7 +43,7 @@ Element.addMethods({
         }
     }
 });
-        	
+            
 MaskedInput = Class.create({
     initialize: function(selector, mask, settings) {  
         this.elements = $$(selector);  
@@ -137,7 +137,7 @@ MaskedInput = Class.create({
             };
 
             function keydownEvent(e) {
-                var pos = $(this).caret();
+                var pos = input.caret();
                 var k = e.keyCode;
                 ignore = (k < 16 || (k > 16 && k < 32) || (k > 32 && k < 41));
                 //delete selection before proceeding
@@ -163,7 +163,7 @@ MaskedInput = Class.create({
                 }
                 e = e || window.event;
                 var k = e.charCode || e.keyCode || e.which;
-                var pos = $(this).caret();
+                var pos = input.caret();
                 if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
                     return true;
                 } else if ((k >= 32 && k <= 125) || k > 186) {//typeable characters
@@ -175,7 +175,7 @@ MaskedInput = Class.create({
                             buffer[p] = c;
                             writeBuffer();
                             var next = seekNext(p);
-                            $(this).caret(next);
+                            input.caret(next);
                             if (settings.completed && next == len)
                                 settings.completed.call(input);
                         }
@@ -183,6 +183,29 @@ MaskedInput = Class.create({
                 }
                 e.stop();
             };
+        
+            function blurEvent(e) {
+                checkVal();
+                //if (input.getValue() != focusText)
+                //	input.fire('change');
+            };
+        
+            function focusEvent(e) {
+                focusText = input.getValue();
+                var pos = checkVal();
+                writeBuffer();
+                    
+                setTimeout(function() {
+                    if (pos == mask.length)
+                        input.caret(0, pos);
+                    else
+                        input.caret(pos);
+                }, 0);
+            };
+        
+            function pasteEvent(e) {
+                setTimeout(function() { input.caret(checkVal(true)); }, 0);
+            }; 
 
             function clearBuffer(start, end) {
                 for (var i = start; i < end && i < len; i++) {
@@ -229,32 +252,20 @@ MaskedInput = Class.create({
                 input
                 .observe("mask:unmask", function() {
                     input
-                        .store("buffer",null)
-                        .store("tests",null);
-                    input.stopObserving();
+                        .store("buffer",undefined)
+                        .store("tests",undefined)
+                        .stopObserving("mask:unmask")
+                        .stopObserving("focus", focusEvent)
+                        .stopObserving("blur", blurEvent)
+                        .stopObserving("keydown", keydownEvent)
+                        .stopObserving("keypress", keypressEvent)
+                        .stopObserving(pasteEventName, pasteEvent);
                 })
-                .observe("focus", function() {
-                    focusText = input.getValue();
-                    var pos = checkVal();
-                    writeBuffer();
-                    
-                    setTimeout(function() {
-                        if (pos == mask.length)
-                            input.caret(0, pos);
-                        else
-                            input.caret(pos);
-                    }, 0);
-                })
-                .observe("blur", function() {
-                    checkVal();
-                    //if (input.getValue() != focusText)
-                    //	input.fire('change');
-                })
+                .observe("focus", focusEvent)
+                .observe("blur", blurEvent)
                 .observe("keydown", keydownEvent)
                 .observe("keypress", keypressEvent)
-                .observe(pasteEventName, function() {
-                    setTimeout(function() { input.caret(checkVal(true)); }, 0);
-                });
+                .observe(pasteEventName, pasteEvent);
 
             checkVal(); //Perform initial check for existing values
         });
