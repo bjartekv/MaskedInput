@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Testing MaskedInput</title>
+    <script type="text/javascript" src="prototype.js"></script>
+    <script type="text/javascript" src="prototype.maskedinput.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+    function logEvent(e) {
+        if (window.console && console.log) {
+            console.log(e.type+' event on '+e.element().identify());
+        }
+    }
+
+    Event.observe(window, 'load', function() {     
+        Event.observe('test', 'focus', logEvent);
+        Event.observe('test2', 'focus', logEvent);
+
+        var mi = new MaskedInput('.text', '99.99.9999');
+        $('unmask').observe('click', function() {
+            mi.unmask();
+        });
+
+        $('mask').observe('click', function() {
+            mi.unmask().mask('99.99.9999');
+        });
+        
+        MaskedInput.definitions['a'] = '[A-Z]'; 
+        MaskedInput.definitions['b'] = '[0-1]'; 
+        
+        new MaskedInput('#test3', 'aa.bb.9999');	
+    });
+    </script>
+    
+    <input id="test" class="text" type="text" size="10" />
+    <input id="test2" class="text" type="text" size="10" />
+    <input id="test3" type="text" size="10" />
+    <button id="unmask">UNMASK</button>
+    <button id="mask">MASK</button>
+</body>
+</html>
