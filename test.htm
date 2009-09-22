@@ -18,7 +18,7 @@
 
     Event.observe(window, 'load', function() {     
         Event.observe('test', 'focus', logEvent);
-        Event.observe('test', 'change', function () {alert('changed!'); });
+        Event.observe('test', 'change', logEvent);
         Event.observe('test2', 'focus', logEvent);
         Event.observe('test2', 'change', logEvent);
 
