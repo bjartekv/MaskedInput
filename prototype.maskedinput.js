@@ -1,10 +1,12 @@
 /*
     Masked Input plugin for prototype ported from jQuery 
     Bjarte K. Vebjørnsen <bjartekv at gmail dot com>
-
-    Removed code for triggering change event since this doesn't work on prototype
         
+    Note that the onchange event isn't fired for masked inputs. It won't fire unless event.simulate.js is available.
+
     Requires: Prototype >= 1.6.1
+    Optional: event.simulate.js from http://github.com/kangax/protolicious to trigger native change event.
+
     Tested on windows IE6, IE7, IE8, Opera 9.6, Chrome 3, FireFox 3, Safari 3
     
     Masked Input plugin for jQuery
@@ -188,8 +190,13 @@
             
                 function blurEvent(e) {
                     checkVal();
-                    //if (input.getValue() != focusText)
-                    //	input.fire('change');
+                    if (input.getValue() != focusText) {
+                        // since the native change event doesn't fire we have to fire it ourselves
+                        // since Event.fire doesn't support native events we're using Event.simulate if available
+                        if (window.Event.simulate) {
+                            input.simulate('change');
+                        }
+                    }
                 };
             
                 function focusEvent(e) {
