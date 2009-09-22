@@ -5,7 +5,7 @@
 <head>
     <title>Testing MaskedInput</title>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js"></script>
-    <script type="text/javascript" src="http://github.com/kangax/protolicious/raw/master/event.simulate.js"></script>
+    <script type="text/javascript" src="event.simulate.js"></script>
     <script type="text/javascript" src="prototype.maskedinput.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
 
     Event.observe(window, 'load', function() {     
         Event.observe('test', 'focus', logEvent);
-        Event.observe('test', 'change', logEvent);
+        Event.observe('test', 'change', function () {alert('changed!'); });
         Event.observe('test2', 'focus', logEvent);
         Event.observe('test2', 'change', logEvent);
 
