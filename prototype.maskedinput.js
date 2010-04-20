@@ -98,7 +98,7 @@
             
                 var input = $(el);
                 
-                var buffer = $A(mask.split("")).map( function(c, i) { if (c != '?') return defs[c] ? settings.placeholder : c });
+                var buffer = $A(mask.replace(/\?/,'').split("")).map( function(c, i) { return defs[c] ? settings.placeholder : c });
 
                 var ignore = false;  			//Variable for ignoring control keys
                 var focusText = input.getValue();
@@ -221,6 +221,7 @@
                         if (tests[i])
                             buffer[i] = settings.placeholder;
                     }
+                    
                 };
 
                 function writeBuffer() { return input.setValue(buffer.join('')).getValue(); };
@@ -247,6 +248,7 @@
                             lastMatch = i;
                         } 
                     }
+                    
                     if (!allow && lastMatch + 1 < partialPosition) {
                         input.setValue("");
                         clearBuffer(0, len);
@@ -254,9 +256,10 @@
                         writeBuffer();
                         if (!allow) input.setValue(input.getValue().substring(0, lastMatch + 1));
                     }
+                    
                     return (partialPosition ? i : firstNonMaskPos);
                 };
-
+		
                 if (!input.readAttribute("readonly"))
                     input
                     .observe("mask:unmask", function() {

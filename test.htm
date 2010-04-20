@@ -10,38 +10,43 @@
 </head>
 <body>
     <script type="text/javascript">
-    function logEvent(e) {
-        if (window.console && console.log) {
-            console.log(e.type+' event on '+e.element().identify());
-        }
-    }
 
     Event.observe(window, 'load', function() {     
-        Event.observe('test', 'focus', logEvent);
-        Event.observe('test', 'change', logEvent);
-        Event.observe('test2', 'focus', logEvent);
-        Event.observe('test2', 'change', logEvent);
 
-        var mi = new MaskedInput('.text', '99.99.9999');
-        $('unmask').observe('click', function() {
-            mi.unmask();
-        });
+        new MaskedInput('#date', '99/99/9999');
+        new MaskedInput('#phone', '(999) 999-9999');
+		new MaskedInput('#phoneext', '(999) 999-9999? x99999');
+		new MaskedInput('#tin', '99-9999999');
+		new MaskedInput('#ssn', '999-99-9999');
+		new MaskedInput('#product', 'a*-999-a999');
+		
 
-        $('mask').observe('click', function() {
-            mi.unmask().mask('99.99.9999');
-        });
-        
-        MaskedInput.definitions['a'] = '[A-Z]'; 
-        MaskedInput.definitions['b'] = '[0-1]'; 
-        
-        new MaskedInput('#test3', 'aa.bb.9999');	
+		new MaskedInput('#eyescript', '~9.99 ~9.99 999', {
+			completed: function(){
+				alert("You typed the following: " + this.getValue());
+			}
+		});
+		
+		MaskedInput.definitions['~']='[+-]';
+
+		new MaskedInput('#eyescript2', '~9.99 ~9.99 999', {
+			completed: function(){
+				alert("You typed the following: " + this.getValue());
+			}
+		});
+
     });
     </script>
     
-    <input id="test" class="text" type="text" size="10" />
-    <input id="test2" class="text" type="text" size="10" />
-    <input id="test3" type="text" size="10" />
-    <button id="unmask">UNMASK</button>
-    <button id="mask">MASK</button>
+<table border="0"><tbody>
+	<tr><td>Date</td><td><input id="date" tabindex="1" type="text"></td><td>99/99/9999</td></tr>
+	<tr><td>Phone</td><td><input id="phone" tabindex="3" type="text"></td><td>(999) 999-9999</td></tr>
+	<tr><td>Phone + Ext</td><td><input id="phoneext" tabindex="4" type="text"></td><td>(999) 999-9999? x99999</td></tr>
+	<tr><td>Tax ID</td><td><input id="tin" tabindex="5" type="text"></td><td>99-9999999</td></tr>
+	<tr><td>SSN</td><td><input id="ssn" tabindex="6" type="text"></td><td>999-99-9999</td></tr>
+	<tr><td>Product Key</td><td><input id="product" tabindex="7" type="text"></td><td>a*-999-a999</td></tr>
+	<tr><td>Eye Script</td><td><input id="eyescript" tabindex="8" type="text"></td><td>~9.99 ~9.99 999</td></tr>
+	<tr><td>Custom</td><td><input id="eyescript2" tabindex="8" type="text"></td><td>[+-]9.99 [+-]9.99 999</td></tr>
+</tbody></table>
 </body>
 </html>
