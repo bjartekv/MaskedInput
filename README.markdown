@@ -6,7 +6,6 @@ The plugin breaks the native change event in the browser. It won't fire unless e
 
 Requires: Prototype >= 1.6.1
 Optional: event.simulate.js from http://github.com/kangax/protolicious to trigger native change event.
-Tested on windows IE6, IE7, IE8, Opera 9.6, Chrome 3, FireFox 3, Safari 3
 
 ### Example code
 
